@@ -1,2 +1,7 @@
 # Dissertation
-YouTube synchronous streaming platform with recommendations
+Synchronised Video Streaming from YouTube, created using:
+<ul>
+<li>Bootstrap</li>
+<li>YouTube API</li>
+<li>AJAX</li>
+</ul>
