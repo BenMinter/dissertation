@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sync</title>
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <!-- Get Classes -->
+  <script src="scripts/client/main.js"></script>
+  <script src="scripts/search.js"></script>
+  <script src="scripts/listitem.js"></script>
+  <script src="scripts/youtube.js"></script>
+  <script src="scripts/queue.js"></script>
+  <script src="scripts/UIManager.js"></script>
+  <script src="scripts/client/rtc.js"></script>
+
+  <!-- Run Main -->
+  <script src="scripts/config.js"></script>
+  <script src="scripts/main.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">
+    <img src="imgs/logo.png" width="150" height="30" class="d-inline-block align-top" alt="">
+  </a>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" href="history.html" target="_blank">History</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<body>
+  <audio id="localAudio" autoplay controls muted hidden></audio>
+    <audio id="remoteAudio" autoplay hidden></audio>
+  <div class= "container" id="wrapper">
+    <!-- Left Side of the Screen -->
+    <div class="container" id="left">
+      <!-- Youtube Player -->
+      <div id="player"></div>
+
+      <div id="recommendations" class="tab-pane" role="tabpanel">
+        <br>
+        <h4 style="margin-left:15px;">
+          Recommendations <button class="btn btn-sm" onclick="generateRecommendations();"><span id="refresh_rec" class="fa fa-refresh"></span></button>
+        </h4>
+        <div id="recommender" class="row" style="margin:5px;"></div>
+        <div class="form-check" style="margin-left:25px;">
+          <input type="checkbox" class="form-check-input" onchange="historyUsage(this)" id="historyChanger"/>
+          <label class="form-check-label" for="historyChanger">Use Group Recommendations?</label>
+        </div>
+      </div>
+    </div>
+
+
+    <!--Right Side of the Screen -->
+    <div class="container" id="right" style="">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="queueTab" data-toggle="tab" href="#queue" role="tab">Queue (0)</a>
+        </li>
+        <li class="nav-item"><a id="roomsTab" class="nav-link" data-toggle="tab" href="#rooms" role="tab">Rooms (0)</a></li>
+        <li class="nav-item"><a class="nav-link" data-toggle="tab" href="#contacts" role="tab">Contacts</a></li>
+        <li class="nav-item"><a id="searchTab" class="nav-link" data-toggle="tab" href="#search" role="tab" style="display:none">Search</a></li>
+        <li class="nav-item"><a id="recommendationsTab" class="nav-link" data-toggle="tab" href="#recommendations" style="display:none">Recommendations</a></li>
+      </ul>
+      <div id="tabContents" class="tab-content">
+        <div id="queue" class="tab-pane active" role="tabpanel" style="margin-right:15px;height:37vh;">
+          <div class="row" id="queueList"></div>
+        </div>
+        <div id="rooms" class="tab-pane" role="tabpanel" style="margin-right:15px;height:37vh;position:relative;">
+          <div id="roomList" class="row"></div>
+          <div id="roomControls" style="position:absolute;bottom:0;width:100%;padding:5px;">
+            <button class="btn btn-info" data-toggle="modal" data-target="#roomChange">Change Room</button><button style="float:right;" class="btn btn-info" onclick="client.sendMessage('rooms')">Refresh</button>
+          </div>
+        </div>
+        <div id="contacts" class="tab-pane" role="tabpanel" style="margin-right:15px;height:37vh;">
+          <!-- Start Talking-->
+          <div id="contactsList" class="row"></div>
+          <button class="btn btn-success" onclick="start(true)">Talk!</button>
+        </div>
+
+      </div>
+      <div id="search" style="margin-right:15px;" class="tab-pane" role="tabpanel">
+
+        <div class="input-group">
+          <span class="input-group-addon fa fa-search" id="basic-addon1"></span>
+          <input type="text" placeholder="Search" class="form-control" aria-label="Search" onkeyup="getSearches(this.value)" aria-describedby="basic-addon1"/>
+        </div>
+        <div style="position:relative">
+          <div id="results" class="row" style="height:40vh;"></div>
+        </div>
+      </div>
+    </div>
+    <form id="questionnaire" action="#" onsubmit="addComments();return false;">
+      <div class="form-group" style="margin:10px;" >
+        <label for="comments">Comments</label>
+        <textarea rows="5" id="comments" aria-describedby="commentsHelp" class="form-control" name="comment" placeholder="Comments, improvements and general experience..."></textarea>
+        <small id="commentsHelp" class="form-text text-muted">As much detail as possible would be greatly appreciated</small>
+      </div>
+      <button style="margin-left:10px;" type="submit" class="btn btn-default">Submit</button>
+    </form>
+  </div>
+
+  <footer class="footer">
+    <div class="container">
+        Designed By Ben Minter 2017 <a href="https://www.linkedin.com/in/ben-minter-44abb314a/"><img src="/images/linkedin.jpg" height=32/></a>
+     </div>
+  </footer>
+
+
+  <!-- Modal Content for room change. -->
+
+  <div id="roomChange" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Change Room</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Enter a new room identifier</p>
+          <form onsubmit="client.setRoom(document.getElementById('newRoomName').value);client.sendMessage('rooms');return false;">
+          <input id="newRoomName" class="form-control" type="text" required placeholder="Enter Room Name"/>
+          <input type="submit" class="btn btn-default" />
+        </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+</body>
+
+
+<style>
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 60px; /* Set the fixed height of the footer here */
+  line-height: 60px; /* Vertically center the text there */
+  text-align:center;
+}
+#gradientBottom {
+    position:absolute;
+    z-index:2;
+    right:0; bottom:0; left:0;
+    height:10px; /* adjust it to your needs */
+    background: linear-gradient(to bottom,  rgba(204,204,204,0) 0%,rgba(204,204,204,1) 70%);
+}​
+</style>
+</html>
