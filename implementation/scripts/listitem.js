@@ -18,7 +18,7 @@ class ListItem {
 
   getHTML(cls, clsid, img){
     let click = (clsid == "queue") ? `onclick="playSong(\'`+this.id+`\')"`:``;
-    return `<div class='` + cls + `'>
+    return `<div class='${cls}'>
         <a href='#' id='`+this.id+`' class='list-group-item list-group-item-action `+clsid+`' ` + click + ` style='display:inline-block;white-space:nowrap;max-height:128px;'>`
         + (img ? `<div class='img' style='display:inline-block'>
             <img class='thumbnail' src='https://img.youtube.com/vi/` + this.id + `/0.jpg' />
