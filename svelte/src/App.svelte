@@ -15,8 +15,29 @@
 
 <script lang="ts">
   import YouTubePlayer from './components/YouTubePlayer.svelte'
+  import SearchBar from './components/SearchBar.svelte'
+  import searchService from './services/SearchService'
+  import type { YoutubeResultType } from './types/YoutubeResult.type'
+  import SearchResults from './components/SearchResults.svelte'
+
+  let videoId
+  let youtubeResults: YoutubeResultType[]
+
+  const searchBarSubmit = async (formData) => {
+    const results = await searchService.search(formData.searchTerm)
+    if (results.items && results.items.length > 0) {
+      youtubeResults = results.items
+      console.debug(youtubeResults, 'YouTube Search Results')
+    }
+  }
+
+  const onItemSelected = (selectedVideoId: String) => {
+    videoId = selectedVideoId
+  }
 </script>
 
 <main>
-  <YouTubePlayer />
+  <SearchBar onsubmit={searchBarSubmit} />
+  <YouTubePlayer bind:videoId />
+  <SearchResults bind:results={youtubeResults} onItemClick={onItemSelected} />
 </main>

@@ -1,4 +1,12 @@
 <script lang="ts">
+  export let onsubmit: (formData: typeof formData) => void
+  let formData = {
+    searchTerm: '',
+  }
 </script>
 
-<input placeholder="Search" type="text" />
+<form on:submit|preventDefault={onsubmit(formData)}>
+  <label>
+    <input placeholder="Search" type="text" bind:value={formData.searchTerm} />
+  </label>
+</form>
