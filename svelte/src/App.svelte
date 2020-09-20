@@ -14,11 +14,11 @@
 </style>
 
 <script lang="ts">
-  import YouTubePlayer from './components/YouTubePlayer.svelte'
   import SearchBar from './components/SearchBar.svelte'
   import searchService from './services/SearchService'
   import type { YoutubeResultType } from './types/YoutubeResult.type'
   import SearchResults from './components/SearchResults.svelte'
+  import YouTubeFrameService from './services/YouTubeFrameService'
 
   let videoId
   let youtubeResults: YoutubeResultType[]
@@ -32,12 +32,11 @@
   }
 
   const onItemSelected = (selectedVideoId: String) => {
-    videoId = selectedVideoId
+    YouTubeFrameService.getYoutubeFrame().loadVideoById(selectedVideoId)
   }
 </script>
 
 <main>
   <SearchBar onsubmit={searchBarSubmit} />
-  <YouTubePlayer bind:videoId />
   <SearchResults bind:results={youtubeResults} onItemClick={onItemSelected} />
 </main>
