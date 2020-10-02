@@ -1,6 +1,9 @@
 {
+  "compilerOptions": {
+      "experimentalDecorators": true
+  },
   "extends": "@tsconfig/svelte/tsconfig.json",
   "strict": true,
   "include": ["src/**/*"],
-  "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
+  "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
 }

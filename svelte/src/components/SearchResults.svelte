@@ -11,14 +11,14 @@
   import type { YoutubeResultType } from '../types/YoutubeResult.type'
   import ListItem from './ListItem.svelte'
 
-  export let onItemClick: (videoId: String) => void
+  export let onItemClick: (option: YoutubeResultType) => void
   export let results: YoutubeResultType[] = []
 </script>
 
 <div class="searchResults">
   {#each results as result}
     <ListItem
-      onItemClick={() => onItemClick(result.id.videoId)}
+      onItemClick={() => onItemClick(result)}
       description={result.snippet.description}
       title={result.snippet.title}
       thumbnail={result.snippet.thumbnails.default.url}
